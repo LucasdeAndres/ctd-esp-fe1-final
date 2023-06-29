@@ -1,5 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "./Slices/counterSlice";
+import episodesReducer from "./Slices/episodesSlice";
+import favoritesReducer from "./Slices/favoritesSlice";
 import filtroReducer from "./Slices/filtroSlice";
 import personajesReducer from "./Slices/personajesSlice";
 
@@ -8,7 +10,9 @@ import personajesReducer from "./Slices/personajesSlice";
     reducer:{
         counter: counterReducer,
         personaje: personajesReducer,
-        filtro: filtroReducer
+        filtro: filtroReducer,
+        favorito: favoritesReducer,
+        episode: episodesReducer,
     }
 })
 

@@ -1,20 +1,22 @@
 import Filtros from "../componentes/personajes/filtros.componente"
 import GrillaPersonajes from "../componentes/personajes/grilla-personajes.componente"
 import Paginacion from "../componentes/paginacion/paginacion.componente";
-import { useEffect, useState } from "react";
-import Personaje from "../types/character.types";
+import { useEffect} from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { setPersonajes } from "../redux/Slices/personajesSlice";
+import { fetchCharactersByFilter, fetchCharactersPage, resetListaPersonajes } from "../redux/Slices/personajesSlice";
+import { clearFiltro } from "../redux/Slices/filtroSlice";
  
 /**
- * Esta es la pagina principal. Aquí se debera ver el panel de filtros junto con la grilla de personajes.
- * 
- * Uso: 
- * ``` <PaginaInicio /> ```
- * 
- * @returns la pagina de inicio
+ * Página principal que muestra el panel de filtros junto con la grilla de personajes.
+ *
+ * Uso:
+ * ```
+ * <PaginaInicio />
+ * ```
+ *
+ * @returns {JSX.Element} - La página de inicio.
  */
-const PaginaInicio = () => {
+const PaginaInicio = (): JSX.Element => {
 
     const count = useAppSelector(state => state.counter.value)
     const filter = useAppSelector(state => state.filtro.filtro)
@@ -26,43 +28,25 @@ const PaginaInicio = () => {
 
     useEffect(() => {
       if (filter === "") {
-          fetch(`https://rickandmortyapi.com/api/character/?page=${count}`)
-              .then(response => response.json())
-              .then((data) => {
-                  const personajesConFavorito = data.results.map((personaje: Personaje) => ({
-                      ...personaje,
-                      favorite: false,
-                  }));
-                  dispatch(setPersonajes(personajesConFavorito));
-              })
-              .catch(error => {
-                  console.error(error);
-              });
+        dispatch(fetchCharactersPage(count));
+      } else {
+        dispatch(fetchCharactersByFilter(filter)).then((result) => {
+          if (fetchCharactersByFilter.rejected.match(result)) {
+            dispatch(resetListaPersonajes())
+          }
+        });
       }
-  }, [count, filter]);
-  
-  useEffect(() => {
-      if (filter !== "") {
-          fetch(`https://rickandmortyapi.com/api/character/?name=${filter}`)
-              .then(response => response.json())
-              .then((data) => {
-                  const personajesConFavorito = data.results.map((personaje: Personaje) => ({
-                      ...personaje,
-                      favorite: false,
-                  }));
-                  dispatch(setPersonajes(personajesConFavorito));
-              })
-              .catch(error => {
-                  console.error(error);
-              });
-      }
-  }, [filter]);
+    }, [count, filter]);
 
+
+  const handleClickFiltros = () => {
+    dispatch(clearFiltro())
+  }
 
     return <div className="container">
         <div className="actions">
             <h3>Catálogo de Personajes</h3>
-            <button className="danger">Test Button</button>
+            <button className="danger" onClick={handleClickFiltros}>Limpiar Filtros</button>
         </div>
         <Filtros />
         <Paginacion count={count}/>

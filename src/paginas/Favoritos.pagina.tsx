@@ -4,29 +4,24 @@ import { useAppSelector } from "../redux/hooks";
 import Personaje from "../types/character.types";
 
 /**
- * Esta es la pagina de favoritos. Aquí se deberan ver todos los personajes marcados como favoritos
- * 
- * Uso: 
- * ``` <PaginaFavoritos /> ```
- * 
- * @returns la pagina de favoritos
+ * Página de favoritos que muestra todos los personajes marcados como favoritos.
+ *
+ * Uso:
+ * ```
+ * <PaginaFavoritos />
+ * ```
+ *
+ * @returns {JSX.Element} - La página de favoritos.
  */
-const PaginaFavoritos = () => {
+const PaginaFavoritos = (): JSX.Element => {
 
     const [listaPersonajesFavoritos, setListaPersonajesFavoritos] = useState<Personaje[]>([])
 
-    useEffect(() => {
-        const favoritosStorage = localStorage.getItem('favoritos');
-        console.log(favoritosStorage);
-        
-        if (favoritosStorage) {
-          const favoritos = JSON.parse(favoritosStorage);
-          setListaPersonajesFavoritos(favoritos);
-        }
-      }, [localStorage.getItem('favoritos')]);
+    const listaFavoritos = useAppSelector((state) => state.favorito.listaFavoritos);
 
-      console.log(localStorage.getItem('favoritos'));
-      
+    useEffect(() => {
+      setListaPersonajesFavoritos(listaFavoritos)
+    }, [listaFavoritos]);
 
     return <div className="container">
         <div className="actions">

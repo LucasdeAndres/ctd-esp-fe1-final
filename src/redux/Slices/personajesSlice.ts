@@ -1,63 +1,91 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import Personaje from "../../types/character.types";
+
+
+export const fetchCharactersPage = createAsyncThunk(
+  'characters/fetchCharactersPage',
+  async (count: number) => {
+    try {
+      const response = await fetch(`https://rickandmortyapi.com/api/character/?page=${count}`);
+      if (!response.ok) {
+        throw new Error('Error fetching characters');
+      }
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
+
+export const fetchCharactersByFilter = createAsyncThunk(
+  'characters/fetchCharactersByFilter',
+  async (filter: string) => {
+    try {
+      const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${filter}`);
+      if (!response.ok) {
+        throw new Error('Error fetching characters');
+      }
+      const data = await response.json();
+      return data.results;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
 
 
 interface PersonajesState {
   listaPersonajes: Personaje[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: PersonajesState = {
   listaPersonajes: [],
+  loading: false,
+  error: null,
 };
 
 const personajesSlice = createSlice({
   name: "personajes",
   initialState,
   reducers: {
-    setPersonajes: (state, action: PayloadAction<Personaje[]>) => {
-      state.listaPersonajes = action.payload;
-    },
-    toggleFavorito: (state, action: PayloadAction<number>) => {
-        const personaje = state.listaPersonajes.find(p => p.id === action.payload);
-        if (personaje) {
-          const { favorite } = personaje;
-          personaje.favorite = !favorite;
-      
-          if (personaje.favorite) {
-            // Agregar el personaje al localStorage de ítems favoritos
-            const favoritos = localStorage.getItem('favoritos');
-            let favoritosArray = [];
-      
-            if (favoritos) {
-              favoritosArray = JSON.parse(favoritos);
-            }
-      
-            const personajeExistente = favoritosArray.find((p: Personaje) => p.id === personaje.id);
-            if (!personajeExistente) {
-              favoritosArray.push(personaje);
-              localStorage.setItem('favoritos', JSON.stringify(favoritosArray));
-            }
-          } else {
-            // Eliminar el personaje del localStorage de ítems favoritos
-            const favoritos = localStorage.getItem('favoritos');
-            let favoritosArray = [];
-      
-            if (favoritos) {
-              favoritosArray = JSON.parse(favoritos);
-      
-              // Buscar y eliminar el personaje del array de favoritos
-              favoritosArray = favoritosArray.filter((p: Personaje) => p.id !== personaje.id);
-      
-              localStorage.setItem('favoritos', JSON.stringify(favoritosArray));
-            }
-          }
-        }
+      resetListaPersonajes: (state) => {
+        state.listaPersonajes = [];
       },
-      
-      
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCharactersPage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCharactersPage.fulfilled, (state, action) => {
+        state.loading = false;
+        state.listaPersonajes = action.payload;
+      })
+      .addCase(fetchCharactersPage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error fetching characters';
+      })
+      .addCase(fetchCharactersByFilter.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCharactersByFilter.fulfilled, (state, action) => {
+        state.loading = false;
+        state.listaPersonajes = action.payload;
+      })
+      .addCase(fetchCharactersByFilter.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Error fetching characters';
+      });
   },
 });
 
-export const { setPersonajes, toggleFavorito } = personajesSlice.actions;
+export const { resetListaPersonajes } = personajesSlice.actions;
 
 export default personajesSlice.reducer;

@@ -1,4 +1,4 @@
-import { type } from 'os';
+
 import { useAppDispatch } from '../../redux/hooks';
 import { decrement, increment } from '../../redux/Slices/counterSlice';
 import './paginacion.css';

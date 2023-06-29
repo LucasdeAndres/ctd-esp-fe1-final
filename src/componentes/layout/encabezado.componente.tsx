@@ -19,7 +19,6 @@ const Encabezado = (): JSX.Element => {
                     <ul>
                         <li><Link to="/">Inicio</Link></li>
                         <li><Link to="/favoritos">Favoritos</Link></li>
-                        <li><Link to="/detalle">Detalle</Link></li>
                     </ul>
                 </nav>
             </div>

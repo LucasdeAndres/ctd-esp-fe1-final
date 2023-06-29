@@ -69,9 +69,9 @@ const PaginaDetalle = ({personaje}: personajePromp) => {
         <h4>Lista de episodios donde apareció el personaje</h4>
         
         <div className={"episodios-grilla"}>
-            {episodes.map(episodio =>{
-              return  <TarjetaEpisodio episode={episodio}/>
-            })}
+        {Array.isArray(episodes) ? episodes.map(episodio => (
+        <TarjetaEpisodio episode={episodio} />
+        )) : <TarjetaEpisodio episode={episodes} />}
         </div>
     </div>
 }

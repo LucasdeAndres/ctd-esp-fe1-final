@@ -1,3 +1,4 @@
+import { Episodio } from '../../types/character.types';
 import './tarjeta-episodio.css';
 
 /**
@@ -7,14 +8,19 @@ import './tarjeta-episodio.css';
  * 
  * 
  * @returns un JSX element 
+ * 
  */
-const TarjetaEpisodio = () => {
+
+type episodeProp ={
+    episode: Episodio,
+}
+const TarjetaEpisodio = ({episode}: episodeProp) => {
 
     return <div className="tarjeta-episodio">
-            <h4>Close Rick-counters of the Rick Kind</h4>
+            <h4>{episode.name}</h4>
             <div>
-                <span>S01E01</span>
-                <span>Lanzado el: April 7, 2014</span>
+                <span>{episode.episode}</span>
+                <span>{episode.air_date}</span>
             </div>
     </div>
 }

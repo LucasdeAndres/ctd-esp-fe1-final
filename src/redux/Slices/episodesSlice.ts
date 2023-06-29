@@ -1,16 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import { Episodio } from "../../types/character.types";
 
 export const fetchEpisodes = createAsyncThunk(
-    'episodios/fetcEpisodes',
+    'episodios/fetchEpisodes',
     async (lista: string) => {
       try {
         const response = await fetch(`https://rickandmortyapi.com/api/episode/${lista}`);
         if (!response.ok) {
           throw new Error('Error fetching episodes');
         }
-        const data = await response.json();
-        return data.results;
+        const data = await response.json();      
+        return data;
       } catch (error) {
         console.error(error);
         throw error;

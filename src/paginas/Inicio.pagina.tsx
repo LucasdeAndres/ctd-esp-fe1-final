@@ -36,7 +36,7 @@ const PaginaInicio = (): JSX.Element => {
           }
         });
       }
-    }, [count, filter]);
+    }, [count, filter, dispatch]);
 
 
   const handleClickFiltros = () => {

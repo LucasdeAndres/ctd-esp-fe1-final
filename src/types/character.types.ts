@@ -18,7 +18,7 @@ export interface Episodio{
     id: number;
     name: string;
     episode: string,
-    airDate: string
+    air_date: string
 }
 
 export default Personaje;

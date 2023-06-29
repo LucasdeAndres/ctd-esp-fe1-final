@@ -2,7 +2,7 @@ import "./Detalle.css";
 import BotonFavorito from "../componentes/botones/boton-favorito.componente";
 import TarjetaEpisodio from "../componentes/episodios/tarjeta-episodio.componente";
 import Personaje from "../types/character.types";
-import { useState } from "react";
+import { useEffect} from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { fetchEpisodes } from "../redux/Slices/episodesSlice";
 
@@ -36,19 +36,21 @@ const PaginaDetalle = ({personaje}: personajePromp) => {
         const numero = url.match(/\d+$/); 
         return numero ? parseInt(numero[0]) : null; 
       });
+      console.log(numerosFinales);
+      
 
       const numerosFinalesString = numerosFinales.filter(numero => numero !== null).join(',');
 
       console.log(numerosFinalesString);
       
 
-      dispatch(fetchEpisodes(numerosFinalesString))
-      
-
+      useEffect(() => {
+        dispatch(fetchEpisodes(numerosFinalesString));
+      }, [dispatch]);
 
       console.log(episodes);
       
-
+      
 
     return <div className="container">
         <h3>{personaje.name}</h3>
@@ -67,10 +69,9 @@ const PaginaDetalle = ({personaje}: personajePromp) => {
         <h4>Lista de episodios donde apareció el personaje</h4>
         
         <div className={"episodios-grilla"}>
-            
-            <TarjetaEpisodio />
-            <TarjetaEpisodio />
-            <TarjetaEpisodio />
+            {episodes.map(episodio =>{
+              return  <TarjetaEpisodio episode={episodio}/>
+            })}
         </div>
     </div>
 }

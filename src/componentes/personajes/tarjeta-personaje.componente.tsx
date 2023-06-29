@@ -1,5 +1,6 @@
 
 
+import { Link } from 'react-router-dom';
 import Personaje from '../../types/character.types';
 import BotonFavorito from '../botones/boton-favorito.componente';
 import './tarjeta-personaje.css';
@@ -23,7 +24,7 @@ const TarjetaPersonaje = ({personaje}: personajePromp) => {
 
 
     return <div className="tarjeta-personaje">
-        <img src={personaje.image} alt={personaje.name}/>
+       <Link to={`detalle/${personaje.id}`}> <img src={personaje.image} alt={personaje.name}/></Link>
         <div className="tarjeta-personaje-body">
             <span>{personaje.name}</span>
             <BotonFavorito personaje={personaje}/>

@@ -1,6 +1,5 @@
 
-import { Link } from 'react-router-dom';
-import { useAppSelector } from '../../redux/hooks';
+
 import Personaje from '../../types/character.types';
 import './grilla-personajes.css';
 import TarjetaPersonaje from './tarjeta-personaje.componente';
@@ -20,7 +19,7 @@ type grillaDePersonajesProp = {
 }
 const GrillaPersonajes = ({listaPersonajes} : grillaDePersonajesProp) => {
 
-  const listaFavoritos = useAppSelector(select => select.favorito.listaFavoritos)
+  
 
   
 
@@ -30,7 +29,7 @@ const GrillaPersonajes = ({listaPersonajes} : grillaDePersonajesProp) => {
 
     return <div className="grilla-personajes">
     {listaPersonajes.map(personaje => (
-      <Link to={`detalle/${personaje.id}`}><TarjetaPersonaje key={personaje.id} personaje={personaje} /></Link>
+      <TarjetaPersonaje key={personaje.id} personaje={personaje} />
     ))}
   </div>
 }
